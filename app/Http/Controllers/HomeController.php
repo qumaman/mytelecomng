@@ -33,7 +33,9 @@ class HomeController extends Controller
             ->leftJoin('divisions', 'divisions.id', '=', 'users.division_id')
             ->leftJoin('teams', 'teams.id', '=', 'users.team_id')
             ->leftJoin('offices', 'offices.id', '=', 'users.office_id')
+            ->selectRaw('users.id , users.sname, users.fname, users.pname, users.phone, users.mobile, users.email, users.subteam, positions.position_name, department.dname, divisions.division_name, teams.tname, offices.oname ')
             ->get();
+       /* echo '<pre>'; var_dump($users) ; die;*/
         return view('list', ['users' => $users]);
     }
     public function profile($id)
@@ -44,6 +46,9 @@ class HomeController extends Controller
         $division = \DB::table('divisions')->where('id', $users->division_id)->first();
         $team = \DB::table('teams')->where('id', $users->team_id)->first();
         $office = \DB::table('offices')->where('id', $users->office_id)->first();
-        return view('profile', ['users' => $users, 'positions' => $position, 'department' => $department, 'division' => $division, 'team' => $team, 'office' => $office]);
+        $heads = \DB::table('users')->find($users->head_id);
+        $dependants = \DB::table('users')->selectRaw('users.id , users.sname, users.fname, users.pname, users.phone, users.mobile, users.email')->where('head_id', $users->id)->get();
+//        echo '<pre>'; var_dump($dependants) ; die;
+        return view('profile', ['users' => $users, 'positions' => $position, 'department' => $department, 'division' => $division, 'team' => $team, 'office' => $office, 'heads' => $heads, 'dependants' => $dependants]);
     }
 }
