@@ -33,6 +33,7 @@ class HomeController extends Controller
             ->leftJoin('divisions', 'divisions.id', '=', 'users.division_id')
             ->leftJoin('teams', 'teams.id', '=', 'users.team_id')
             ->leftJoin('offices', 'offices.id', '=', 'users.office_id')
+            ->where('office_id', '>', 0)
             ->selectRaw('users.id , users.sname, users.fname, users.pname, users.phone, users.mobile, users.email, users.subteam, positions.position_name, department.dname, divisions.division_name, teams.tname, offices.oname ')
             ->get();
        /* echo '<pre>'; var_dump($users) ; die;*/
